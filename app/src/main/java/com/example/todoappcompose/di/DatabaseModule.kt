@@ -34,20 +34,3 @@ object DatabaseModule {
         return database.toDoDao()
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

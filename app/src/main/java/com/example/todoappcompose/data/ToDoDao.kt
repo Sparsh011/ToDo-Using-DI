@@ -13,13 +13,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ToDoDao {
     @Query("SELECT * FROM $DATABASE_TABLE ORDER BY id ASC")
-    fun getAllTasks() : Flow<List<ToDoTask>>
+    fun getAllTasks(): Flow<List<ToDoTask>>
 
     @Query("SELECT * FROM $DATABASE_TABLE WHERE id= :taskId")
-    fun getSelectedTask(taskId: Int) : Flow<ToDoTask>
+    fun getSelectedTask(taskId: Int): Flow<ToDoTask>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addNewTask(toDoTask: ToDoTask) : Int // handle -1 as well
+    suspend fun addNewTask(toDoTask: ToDoTask): Int // handle -1 as well
 
     @Update
     suspend fun updateTask(toDoTask: ToDoTask)
@@ -31,29 +31,12 @@ interface ToDoDao {
     suspend fun deleteAllTasks()
 
     @Query("SELECT * FROM $DATABASE_TABLE WHERE title LIKE :searchQuery OR description LIKE :searchQuery")
-    fun searchTask(searchQuery: String) : Flow<List<ToDoTask>>
+    fun searchTask(searchQuery: String): Flow<List<ToDoTask>>
 
     @Query("SELECT * FROM $DATABASE_TABLE ORDER BY CASE WHEN priority LIKE 'L%' THEN 1 WHEN priority LIKE 'M%' THEN 2 WHEN priority LIKE 'H%' THEN 3 END")
-    fun sortByLowPriority() : Flow<List<ToDoTask>>
+    fun sortByLowPriority(): Flow<List<ToDoTask>>
 
 
     @Query("SELECT * FROM $DATABASE_TABLE ORDER BY CASE WHEN priority LIKE 'H%' THEN 1 WHEN priority LIKE 'M%' THEN 2 WHEN priority LIKE 'L%' THEN 3 END")
-    fun sortByHighPriority() : Flow<List<ToDoTask>>
+    fun sortByHighPriority(): Flow<List<ToDoTask>>
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
