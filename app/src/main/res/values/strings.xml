@@ -4,4 +4,6 @@
     <string name="search_tasks">Search Tasks</string>
     <string name="sort_action">Sort Tasks</string>
     <string name="delete_all_tasks">Delete All Tasks</string>
+    <string name="clear_search">Clear Search</string>
+    <string name="no_tasks">\"No Tasks To Show!\"</string>
 </resources>

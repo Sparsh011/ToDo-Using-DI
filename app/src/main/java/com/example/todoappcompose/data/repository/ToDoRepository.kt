@@ -16,7 +16,7 @@ class ToDoRepository @Inject constructor(private val toDoDao: ToDoDao) {
         return toDoDao.getSelectedTask(taskId = taskId)
     }
 
-    suspend fun addTask(toDoTask: ToDoTask): Int {
+    suspend fun addTask(toDoTask: ToDoTask): Long {
         return toDoDao.addNewTask(toDoTask = toDoTask)
     }
 
