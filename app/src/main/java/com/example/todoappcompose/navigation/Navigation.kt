@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import com.example.todoappcompose.navigation.destinations.listComposable
 import com.example.todoappcompose.navigation.destinations.taskComposable
 import com.example.todoappcompose.ui.viewmodels.SharedViewModel
-import com.example.todoappcompose.util.Constants.LIST_SCREEN
+import com.example.todoappcompose.util.Constants.LIST_SCREEN_ROUTE
 
 @Composable
 fun SetupNavigation(
@@ -20,14 +20,15 @@ fun SetupNavigation(
 
     NavHost(
         navController = navHostController,
-        startDestination = LIST_SCREEN
+        startDestination = LIST_SCREEN_ROUTE
     ) {
         listComposable(
             navigateToTaskScreen = screen.task,
             sharedViewModel = sharedViewModel
         )
         taskComposable (
-            navigateToListScreen = screen.list
+            navigateToListScreen = screen.list,
+            sharedViewModel = sharedViewModel
         )
     }
 }

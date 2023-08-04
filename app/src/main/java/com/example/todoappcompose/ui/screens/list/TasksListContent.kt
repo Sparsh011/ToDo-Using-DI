@@ -20,16 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.example.todoappcompose.data.models.Priority
 import com.example.todoappcompose.data.models.ToDoTask
 import com.example.todoappcompose.ui.theme.LARGE_PADDING
 import com.example.todoappcompose.ui.theme.PRIORITY_INDICATOR_SIZE
 import com.example.todoappcompose.ui.theme.TASK_ITEM_ELEVATION
 import com.example.todoappcompose.util.RequestState
 
-private val TAG = "TasksListContentTag"
 @Composable
 fun TasksListContent(
     tasks: RequestState<List<ToDoTask>>,
