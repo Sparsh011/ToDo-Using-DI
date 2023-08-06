@@ -31,7 +31,9 @@ fun NavGraphBuilder.taskComposable(
         val selectedTask by sharedViewModel.selectedTask.collectAsState()
 
         LaunchedEffect(key1 = selectedTask) { // check why it fails when key1 = taskId but works for selectedTask
-            sharedViewModel.updateTaskFields(selectedTask = selectedTask)
+            if (selectedTask != null || taskId == -1) { // so that when task is deleted and undo is clicked, fields are not updated to empty
+                sharedViewModel.updateTaskFields(selectedTask = selectedTask)
+            }
         }
 
         TaskScreen(

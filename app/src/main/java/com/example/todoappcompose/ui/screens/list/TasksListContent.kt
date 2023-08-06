@@ -20,28 +20,63 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
+import com.example.todoappcompose.data.models.Priority
 import com.example.todoappcompose.data.models.ToDoTask
 import com.example.todoappcompose.ui.theme.LARGE_PADDING
 import com.example.todoappcompose.ui.theme.PRIORITY_INDICATOR_SIZE
 import com.example.todoappcompose.ui.theme.TASK_ITEM_ELEVATION
 import com.example.todoappcompose.util.RequestState
+import com.example.todoappcompose.util.SearchAppBarState
 
 @Composable
 fun TasksListContent(
-    tasks: RequestState<List<ToDoTask>>,
+    allTasks: RequestState<List<ToDoTask>>,
+    searchedTasks : RequestState<List<ToDoTask>>,
     navigateToTaskScreen: (taskId: Int) -> Unit,
+    searchAppBarState: SearchAppBarState,
     padding: PaddingValues,
+    lowPriorityTasks : List<ToDoTask>,
+    highPriorityTasks : List<ToDoTask>,
+    sortState: RequestState<Priority>
 ) {
-    if (tasks is RequestState.Success) {
-        if (tasks.data.isEmpty()) {
-            EmptyListContent()
-        }
-        else {
-            DisplayTasks(
-                tasks = tasks.data,
-                navigateToTaskScreen = navigateToTaskScreen,
-                padding = padding
-            )
+
+    if (sortState is RequestState.Success) {
+        when {
+            searchAppBarState == SearchAppBarState.TRIGGERED -> {
+                if (searchedTasks is RequestState.Success) {
+                    HandleListContent(
+                        tasks = searchedTasks.data,
+                        navigateToTaskScreen = navigateToTaskScreen,
+                        padding = padding
+                    )
+                }
+            }
+
+            sortState.data == Priority.NONE -> {
+                if (allTasks is RequestState.Success) {
+                    HandleListContent(
+                        tasks = allTasks.data,
+                        navigateToTaskScreen = navigateToTaskScreen,
+                        padding = padding
+                    )
+                }
+            }
+
+            sortState.data == Priority.LOW -> {
+                HandleListContent(
+                    tasks = lowPriorityTasks,
+                    navigateToTaskScreen = navigateToTaskScreen,
+                    padding = padding
+                )
+            }
+
+            sortState.data == Priority.HIGH -> {
+                HandleListContent(
+                    tasks = highPriorityTasks,
+                    navigateToTaskScreen = navigateToTaskScreen,
+                    padding = padding
+                )
+            }
         }
     }
 }
@@ -115,5 +150,23 @@ fun TaskItem(
                 overflow = TextOverflow.Ellipsis // shows dots when description overflows 2 lines
             )
         }
+    }
+}
+
+@Composable
+fun HandleListContent(
+    tasks: List<ToDoTask>,
+    navigateToTaskScreen: (taskId: Int) -> Unit,
+    padding: PaddingValues
+) {
+    if (tasks.isEmpty()) {
+        EmptyListContent()
+    }
+    else {
+        DisplayTasks(
+            tasks = tasks,
+            navigateToTaskScreen = navigateToTaskScreen,
+            padding = padding
+        )
     }
 }

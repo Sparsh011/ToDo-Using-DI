@@ -25,17 +25,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.todoappcompose.R
+import com.example.todoappcompose.components.DisplayAlertDialog
 import com.example.todoappcompose.components.PriorityItem
 import com.example.todoappcompose.data.models.Priority
 import com.example.todoappcompose.ui.theme.LARGE_PADDING
 import com.example.todoappcompose.ui.theme.TOP_APP_BAR_HEIGHT
 import com.example.todoappcompose.ui.viewmodels.SharedViewModel
+import com.example.todoappcompose.util.Action
 import com.example.todoappcompose.util.SearchAppBarState
 import com.example.todoappcompose.util.TrailingSearchIconState
 
@@ -51,8 +54,12 @@ fun ListAppBar(
                 onSearchClicked = {
                     sharedViewModel.searchAppBarState.value = SearchAppBarState.OPENED
                 },
-                onSortClicked = {},
-                onDeleteClicked = {}
+                onSortClicked = { priority ->
+                    sharedViewModel.persistSortingTasksByPriorityState(priority = priority)
+                },
+                onDeleteAllConfirmed = {
+                    sharedViewModel.action.value = Action.DELETE_ALL
+                }
             )
         }
         else -> {
@@ -66,7 +73,9 @@ fun ListAppBar(
                         SearchAppBarState.CLOSED
                     sharedViewModel.searchTextState.value = ""
                 },
-                onSearchClicked = {}
+                onSearchClicked = {
+                    sharedViewModel.searchDatabase(searchQuery = it)
+                }
             )
         }
     }
@@ -77,7 +86,7 @@ fun ListAppBar(
 fun DefaultListAppBar(
     onSearchClicked: () -> Unit,
     onSortClicked: (Priority) -> Unit,
-    onDeleteClicked: () -> Unit,
+    onDeleteAllConfirmed: () -> Unit,
 ) {
     TopAppBar(
         title = {
@@ -90,7 +99,7 @@ fun DefaultListAppBar(
             ListAppBarActions(
                 onSearchClicked = onSearchClicked,
                 onSortClicked = onSortClicked,
-                onDeleteClicked = onDeleteClicked
+                onDeleteAllConfirmed = onDeleteAllConfirmed
             )
         }
     )
@@ -100,8 +109,22 @@ fun DefaultListAppBar(
 fun ListAppBarActions(
     onSearchClicked: () -> Unit,
     onSortClicked: (Priority) -> Unit,
-    onDeleteClicked: () -> Unit,
+    onDeleteAllConfirmed: () -> Unit,
 ) {
+    var openDialog by remember {
+        mutableStateOf(false)
+    }
+    DisplayAlertDialog(
+        title = stringResource(id = R.string.delete_all_tasks),
+        message = stringResource(id = R.string.delete_all_tasks_confirmation),
+        openDialog = openDialog,
+        closeDialog = {
+            openDialog = false
+        },
+        onYesClicked = {
+            onDeleteAllConfirmed()
+        }
+    )
     SearchAction(
         onSearchClicked
     )
@@ -109,7 +132,9 @@ fun ListAppBarActions(
         onSortClicked = onSortClicked
     )
     DeleteAllAction(
-        onDeleteClicked = onDeleteClicked
+        onDeleteAllConfirmed = {
+            openDialog = true
+        }
     )
 }
 
@@ -185,7 +210,7 @@ fun SearchAction(
 
 @Composable
 fun DeleteAllAction(
-    onDeleteClicked: () -> Unit,
+    onDeleteAllConfirmed: () -> Unit,
 ) {
     var expanded by remember {
         mutableStateOf(false)
@@ -197,7 +222,7 @@ fun DeleteAllAction(
     ) {
         Icon(
             painter = painterResource(id = R.drawable.baseline_more_vert_24),
-            contentDescription = stringResource(id = R.string.delete_all_tasks),
+            contentDescription = stringResource(id = R.string.delete_all_action),
             tint = Color.Black
         )
 
@@ -212,11 +237,11 @@ fun DeleteAllAction(
                 text = {
                     Text(
                         modifier = Modifier.padding(start = LARGE_PADDING),
-                        text = stringResource(id = R.string.delete_all_tasks)
+                        text = stringResource(id = R.string.delete_all_action)
                     )
                 },
                 onClick = {
-                    onDeleteClicked()
+                    onDeleteAllConfirmed()
                     expanded = false
                 }
             )
@@ -235,6 +260,7 @@ fun SearchAppBar(
     var trailingSearchIconState by remember {
         mutableStateOf(TrailingSearchIconState.READY_TO_DELETE_SEARCH_QUERY)
     }
+    val focusManager = LocalFocusManager.current
 
     Surface(
         modifier = Modifier
@@ -299,6 +325,7 @@ fun SearchAppBar(
             keyboardActions = KeyboardActions(
                 onSearch = {
                     onSearchClicked(searchQuery)
+                    focusManager.clearFocus() // close keyboard when search button is clicked from keyboard
                 }
             )
         )
@@ -323,7 +350,7 @@ fun DefaultListAppBarPreview() {
     DefaultListAppBar(
         onSearchClicked = {},
         onSortClicked = {},
-        onDeleteClicked = {}
+        onDeleteAllConfirmed = {}
     )
 }
 
