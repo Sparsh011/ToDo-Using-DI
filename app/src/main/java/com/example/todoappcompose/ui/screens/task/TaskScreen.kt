@@ -1,12 +1,11 @@
 package com.example.todoappcompose.ui.screens.task
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import com.example.todoappcompose.data.models.Priority
 import com.example.todoappcompose.data.models.ToDoTask
@@ -23,11 +22,15 @@ fun TaskScreen(
     navigateToListScreen: (Action) -> Unit,
 ) {
 
-    val title : String by sharedViewModel.title
-    val description : String by sharedViewModel.description
-    val priority : Priority by sharedViewModel.priority
+    val title : String = sharedViewModel.title
+    val description : String = sharedViewModel.description
+    val priority : Priority = sharedViewModel.priority
 
     val context = LocalContext.current
+
+    BackHandler {
+        navigateToListScreen(Action.NO_ACTION)
+    }
 
     Scaffold(
         topBar = {
@@ -56,11 +59,11 @@ fun TaskScreen(
                 },
                 description = description,
                 onDescriptionChanged = {
-                    sharedViewModel.description.value = it
+                    sharedViewModel.updateDescription(newDescription = it)
                 },
                 priority = priority,
                 onPrioritySelected = {
-                    sharedViewModel.priority.value = it
+                    sharedViewModel.updatePriority(newPriority = it)
                 },
                 paddingValues
             )

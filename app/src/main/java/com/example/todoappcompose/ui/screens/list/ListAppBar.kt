@@ -40,7 +40,6 @@ import com.example.todoappcompose.ui.theme.TOP_APP_BAR_HEIGHT
 import com.example.todoappcompose.ui.viewmodels.SharedViewModel
 import com.example.todoappcompose.util.Action
 import com.example.todoappcompose.util.SearchAppBarState
-import com.example.todoappcompose.util.TrailingSearchIconState
 
 @Composable
 fun ListAppBar(
@@ -52,13 +51,13 @@ fun ListAppBar(
         SearchAppBarState.CLOSED -> {
             DefaultListAppBar(
                 onSearchClicked = {
-                    sharedViewModel.searchAppBarState.value = SearchAppBarState.OPENED
+                    sharedViewModel.updateSearchAppBarState(newState = SearchAppBarState.OPENED)
                 },
                 onSortClicked = { priority ->
                     sharedViewModel.persistSortingTasksByPriorityState(priority = priority)
                 },
                 onDeleteAllConfirmed = {
-                    sharedViewModel.action.value = Action.DELETE_ALL
+                    sharedViewModel.updateAction(Action.DELETE_ALL)
                 }
             )
         }
@@ -66,12 +65,11 @@ fun ListAppBar(
             SearchAppBar(
                 searchQuery = searchTextState,
                 onTextChange = { newText ->
-                    sharedViewModel.searchTextState.value = newText
+                    sharedViewModel.updateSearchText(newSearchQuery = newText)
                 },
                 onCloseClicked = {
-                    sharedViewModel.searchAppBarState.value =
-                        SearchAppBarState.CLOSED
-                    sharedViewModel.searchTextState.value = ""
+                    sharedViewModel.updateSearchAppBarState(newState = SearchAppBarState.CLOSED)
+                    sharedViewModel.updateSearchText("")
                 },
                 onSearchClicked = {
                     sharedViewModel.searchDatabase(searchQuery = it)
@@ -162,33 +160,17 @@ fun SortAction(
                 expanded = false
             })
         {
-            DropdownMenuItem(
-                text = {
-                    PriorityItem(priority = Priority.LOW)
-                },
-                onClick = {
-                    expanded = false
-                    onSortClicked(Priority.LOW)
-                }
-            )
-            DropdownMenuItem(
-                text = {
-                    PriorityItem(priority = Priority.HIGH)
-                },
-                onClick = {
-                    expanded = false
-                    onSortClicked(Priority.HIGH)
-                }
-            )
-            DropdownMenuItem(
-                text = {
-                    PriorityItem(priority = Priority.NONE)
-                },
-                onClick = {
-                    expanded = false
-                    onSortClicked(Priority.NONE)
-                }
-            )
+            Priority.values().slice(setOf(0, 2, 3)).forEach { priority ->
+                DropdownMenuItem(
+                    text = {
+                        PriorityItem(priority = priority)
+                    },
+                    onClick = {
+                        expanded = false
+                        onSortClicked(Priority.LOW)
+                    }
+                )
+            }
         }
     }
 }
@@ -256,10 +238,7 @@ fun SearchAppBar(
     onTextChange: (String) -> Unit,
     onCloseClicked: () -> Unit,
     onSearchClicked: (String) -> Unit,
-) {
-    var trailingSearchIconState by remember {
-        mutableStateOf(TrailingSearchIconState.READY_TO_DELETE_SEARCH_QUERY)
-    }
+){
     val focusManager = LocalFocusManager.current
 
     Surface(
@@ -295,20 +274,11 @@ fun SearchAppBar(
             },
             trailingIcon = {
                 IconButton(onClick = {
-                    when(trailingSearchIconState) {
-                        TrailingSearchIconState.READY_TO_DELETE_SEARCH_QUERY -> {
-                            onTextChange("")
-                            trailingSearchIconState = TrailingSearchIconState.READY_TO_CLOSE_SEARCH_BAR
-                        }
-                        TrailingSearchIconState.READY_TO_CLOSE_SEARCH_BAR -> {
-                            if(searchQuery.isNotEmpty()) {
-                                onTextChange("")
-                            }
-                            else {
-                                onCloseClicked()
-                                trailingSearchIconState = TrailingSearchIconState.READY_TO_DELETE_SEARCH_QUERY
-                            }
-                        }
+                    if (searchQuery.isNotEmpty()) {
+                        onTextChange("")
+                    }
+                    else {
+                        onCloseClicked()
                     }
                 })
                 {

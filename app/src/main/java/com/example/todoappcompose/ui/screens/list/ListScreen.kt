@@ -28,20 +28,20 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListScreen(
+    action: Action,
     navigateToTaskScreen: (taskId: Int) -> Unit,
     sharedViewModel: SharedViewModel,
 ) {
-    LaunchedEffect(key1 = true) {
-        sharedViewModel.getAllTasks()
-        sharedViewModel.readSortState()
+    
+    LaunchedEffect(key1 = action) {
+        sharedViewModel.handleDatabaseActions(action)
     }
+    
     val allTasks by sharedViewModel.allTasks.collectAsState() // updates allTasks var whenever there is a change in DB
     val searchedTasks by sharedViewModel.allSearchTasks.collectAsState()
 
-    val searchAppBarState : SearchAppBarState by sharedViewModel.searchAppBarState
-    val searchTextBarState : String by sharedViewModel.searchTextState
-
-    val action by sharedViewModel.action
+    val searchAppBarState : SearchAppBarState = sharedViewModel.searchAppBarState
+    val searchTextBarState : String = sharedViewModel.searchTextState
 
     val snackBarHostState = remember {
         SnackbarHostState()
@@ -53,11 +53,11 @@ fun ListScreen(
 
     DisplaySnackBar(
         snackBarHostState = snackBarHostState,
-        handleDatabaseActions = { sharedViewModel.handleDatabaseActions(action = action) },
+        onComplete = { sharedViewModel.updateAction(newAction = it)},
         onUndoClicked = {
-            sharedViewModel.action.value = it
+            sharedViewModel.updateAction(newAction = it)
         },
-        taskTitle = sharedViewModel.title.value,
+        taskTitle = sharedViewModel.title,
         action = action
     )
 
@@ -79,7 +79,12 @@ fun ListScreen(
                 searchAppBarState = searchAppBarState,
                 highPriorityTasks = highPriorityTasks,
                 lowPriorityTasks = lowPriorityTasks,
-                sortState = sortState
+                sortState = sortState,
+                onSwipeToDelete = { action, task ->
+                    sharedViewModel.updateAction(newAction = action)
+                    sharedViewModel.updateTaskFields(selectedTask = task)
+                    snackBarHostState.currentSnackbarData?.dismiss()
+                }
             )
         },
         floatingActionButton = {
@@ -110,12 +115,11 @@ fun ListFab(
 @Composable
 fun DisplaySnackBar(
     snackBarHostState: SnackbarHostState,
-    handleDatabaseActions : () -> Unit,
+    onComplete : (Action) -> Unit,
     onUndoClicked: (Action) -> Unit,
     taskTitle : String,
     action : Action
 ) {
-    handleDatabaseActions()
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = action) {
@@ -131,6 +135,8 @@ fun DisplaySnackBar(
                     onUndoClicked = onUndoClicked
                 )
             }
+
+            onComplete(Action.NO_ACTION)
         }
     }
 }

@@ -7,6 +7,7 @@ object Constants {
 //    Routes -
     const val LIST_SCREEN_ROUTE = "list/{action}"
     const val TASK_SCREEN_ROUTE = "task/{taskId}"
+    const val SPLASH_SCREEN_ROUTE = "splash"
 
 //    Arguments -
     const val LIST_ARGUMENTS_KEY = "action"
@@ -17,4 +18,6 @@ object Constants {
 //    DataStore -
     const val PREFERENCE_NAME = "todos_preference"
     const val PREFERENCE_KEY = "sort_state"
+
+    const val SPLASH_SCREEN_DELAY = 2500L
 }
