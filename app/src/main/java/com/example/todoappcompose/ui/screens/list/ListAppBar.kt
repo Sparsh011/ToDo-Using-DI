@@ -13,6 +13,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -37,6 +38,8 @@ import com.example.todoappcompose.components.PriorityItem
 import com.example.todoappcompose.data.models.Priority
 import com.example.todoappcompose.ui.theme.LARGE_PADDING
 import com.example.todoappcompose.ui.theme.TOP_APP_BAR_HEIGHT
+import com.example.todoappcompose.ui.theme.topAppBarBackgroundColor
+import com.example.todoappcompose.ui.theme.topAppBarContentColor
 import com.example.todoappcompose.ui.viewmodels.SharedViewModel
 import com.example.todoappcompose.util.Action
 import com.example.todoappcompose.util.SearchAppBarState
@@ -92,7 +95,9 @@ fun DefaultListAppBar(
                 text = "Tasks"
             )
         },
-        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.White),
+        colors = TopAppBarDefaults.mediumTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.topAppBarBackgroundColor
+        ),
         actions = {
             ListAppBarActions(
                 onSearchClicked = onSearchClicked,
@@ -151,7 +156,7 @@ fun SortAction(
         Icon(
             painter = painterResource(id = R.drawable.baseline_filter_list_24),
             contentDescription = stringResource(id = R.string.sort_action),
-            tint = Color.Black
+            tint = MaterialTheme.colorScheme.topAppBarContentColor
         )
 
         DropdownMenu(
@@ -167,7 +172,7 @@ fun SortAction(
                     },
                     onClick = {
                         expanded = false
-                        onSortClicked(Priority.LOW)
+                        onSortClicked(priority)
                     }
                 )
             }
@@ -185,7 +190,7 @@ fun SearchAction(
         Icon(
             imageVector = Icons.Filled.Search,
             contentDescription = stringResource(id = R.string.search_tasks),
-            tint = Color.Black
+            tint = MaterialTheme.colorScheme.topAppBarContentColor
         )
     }
 }
@@ -205,7 +210,7 @@ fun DeleteAllAction(
         Icon(
             painter = painterResource(id = R.drawable.baseline_more_vert_24),
             contentDescription = stringResource(id = R.string.delete_all_action),
-            tint = Color.Black
+            tint = MaterialTheme.colorScheme.topAppBarContentColor
         )
 
         DropdownMenu(
@@ -245,7 +250,7 @@ fun SearchAppBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(TOP_APP_BAR_HEIGHT),
-        color = Color.White
+        color = MaterialTheme.colorScheme.topAppBarBackgroundColor
     ) {
         TextField(
             modifier = Modifier.fillMaxWidth(),
@@ -256,7 +261,7 @@ fun SearchAppBar(
             placeholder = {
                 Text(
                     text = stringResource(id = R.string.search_tasks),
-                    color = Color.LightGray
+                    color = MaterialTheme.colorScheme.topAppBarContentColor
                 )
             },
             textStyle = TextStyle(
@@ -268,7 +273,7 @@ fun SearchAppBar(
                     Icon(
                         imageVector = Icons.Filled.Search,
                         contentDescription = stringResource(id = R.string.search_tasks),
-                        tint = Color.Gray
+                        tint = MaterialTheme.colorScheme.topAppBarContentColor
                     )
                 }
             },
@@ -285,7 +290,7 @@ fun SearchAppBar(
                     Icon(
                         imageVector = Icons.Filled.Clear,
                         contentDescription = stringResource(id = R.string.clear_search),
-                        tint = Color.Gray
+                        tint = MaterialTheme.colorScheme.topAppBarContentColor
                     )
                 }
             },

@@ -9,14 +9,15 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,6 +25,8 @@ import com.example.todoappcompose.R
 import com.example.todoappcompose.components.DisplayAlertDialog
 import com.example.todoappcompose.data.models.Priority
 import com.example.todoappcompose.data.models.ToDoTask
+import com.example.todoappcompose.ui.theme.topAppBarBackgroundColor
+import com.example.todoappcompose.ui.theme.topAppBarContentColor
 import com.example.todoappcompose.util.Action
 
 @Composable
@@ -58,7 +61,10 @@ fun NewTaskAppBar(
         },
         actions = {
             AddAction(onAddClicked = navigateToListScreen)
-        }
+        },
+        colors = TopAppBarDefaults.mediumTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.topAppBarBackgroundColor
+        )
     )
 }
 
@@ -74,7 +80,7 @@ fun BackAction(
         Icon(
             imageVector = Icons.Filled.ArrowBack,
             contentDescription = null,
-            tint = Color.Black
+            tint = MaterialTheme.colorScheme.topAppBarContentColor
         )
     }
 }
@@ -91,7 +97,7 @@ fun AddAction(
         Icon(
             imageVector = Icons.Filled.Add,
             contentDescription = null,
-            tint = Color.Black
+            tint = MaterialTheme.colorScheme.topAppBarContentColor
         )
     }
 }
@@ -118,7 +124,10 @@ fun ExistingTaskAppBar(
                 selectedTask = selectedTask,
                 navigateToListScreen = navigateToListScreen
             )
-        }
+        },
+        colors = TopAppBarDefaults.mediumTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.topAppBarBackgroundColor
+        )
     )
 }
 
@@ -159,7 +168,7 @@ fun CloseAction(
         Icon(
             imageVector = Icons.Filled.Close,
             contentDescription = null,
-            tint = Color.Black
+            tint = MaterialTheme.colorScheme.topAppBarContentColor
         )
     }
 }
@@ -176,7 +185,7 @@ fun DeleteAction(
         Icon(
             imageVector = Icons.Filled.Delete,
             contentDescription = null,
-            tint = Color.Black
+            tint = MaterialTheme.colorScheme.topAppBarContentColor
         )
     }
 }
@@ -193,7 +202,7 @@ fun UpdateAction(
         Icon(
             imageVector = Icons.Filled.Check,
             contentDescription = null,
-            tint = Color.Black
+            tint = MaterialTheme.colorScheme.topAppBarContentColor
         )
     }
 }

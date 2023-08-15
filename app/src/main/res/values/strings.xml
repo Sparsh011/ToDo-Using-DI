@@ -5,7 +5,7 @@
     <string name="sort_action">Sort Tasks</string>
     <string name="delete_all_action">Delete All Tasks</string>
     <string name="clear_search">Clear Search</string>
-    <string name="no_tasks">\"No Tasks To Show!\"</string>
+    <string name="no_tasks">\All Tasks Completed!</string>
     <string name="create_new_task">Create New Task</string>
     <string name="title_label">Title</string>
     <string name="description_label">Description</string>

@@ -31,8 +31,8 @@ fun TaskContent(
 ) {
     Column (
         modifier = Modifier
-            .fillMaxSize()
             .padding(paddingValues)
+            .padding(MEDIUM_PADDING)
     ){
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),

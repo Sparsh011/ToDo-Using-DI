@@ -5,10 +5,12 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -18,12 +20,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.todoappcompose.R
 import com.example.todoappcompose.ui.theme.LOGO_HEIGHT
+import com.example.todoappcompose.ui.theme.statusBarColor
 import com.example.todoappcompose.util.Constants.SPLASH_SCREEN_DELAY
 import kotlinx.coroutines.delay
 
@@ -55,7 +57,7 @@ fun SplashScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Blue),
+            .background(MaterialTheme.colorScheme.statusBarColor),
         contentAlignment = Alignment.Center
     ) {
         Image(
@@ -70,7 +72,8 @@ fun SplashScreen(
 }
 @Composable
 fun getLogo(): Int {
-    return R.drawable.baseline_checklist_24
+    if (isSystemInDarkTheme()) return R.drawable.checklist_light
+    return R.drawable.checklist_dark
 }
 
 @Composable

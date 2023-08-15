@@ -8,6 +8,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,6 +28,7 @@ import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.rememberDismissState
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
@@ -48,6 +50,8 @@ import com.example.todoappcompose.data.models.ToDoTask
 import com.example.todoappcompose.ui.theme.HighPriorityColor
 import com.example.todoappcompose.ui.theme.LARGEST_PADDING
 import com.example.todoappcompose.ui.theme.LARGE_PADDING
+import com.example.todoappcompose.ui.theme.MEDIUM_PADDING
+import com.example.todoappcompose.ui.theme.MediumGray
 import com.example.todoappcompose.ui.theme.PRIORITY_INDICATOR_SIZE
 import com.example.todoappcompose.ui.theme.TASK_ITEM_ELEVATION
 import com.example.todoappcompose.util.Action
@@ -126,7 +130,12 @@ fun DisplayTasks(
     LazyColumn(
         modifier = Modifier.padding(padding)
     ) {
-        items(items = tasks) { task ->
+        items(
+            items = tasks,
+            key = { task ->
+                task.id
+            }
+        )  { task ->
             val dismissState = rememberDismissState()
             val dismissDirection = dismissState.dismissDirection
             val isDismissed = dismissState.isDismissed(DismissDirection.EndToStart)
@@ -142,7 +151,7 @@ fun DisplayTasks(
                 if (dismissState.targetValue == DismissValue.Default)
                     0f
                 else
-                    -45f
+                    -45f, label = ""
             )
 
             var itemAppeared by remember {
@@ -174,6 +183,7 @@ fun DisplayTasks(
                     }
                 )
             }
+            Divider(modifier = Modifier.padding(start = MEDIUM_PADDING, end = MEDIUM_PADDING, top = MEDIUM_PADDING))
         }
     }
 }
@@ -206,7 +216,6 @@ fun TaskItem(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.White),
-        shadowElevation = TASK_ITEM_ELEVATION,
         onClick = {
             navigateToTaskScreen(toDoTask.id)
         }

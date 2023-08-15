@@ -2,10 +2,12 @@ package com.example.todoappcompose.ui.screens.list
 
 import android.annotation.SuppressLint
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -18,7 +20,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.todoappcompose.R
+import com.example.todoappcompose.ui.theme.fabBackgroundColor
 import com.example.todoappcompose.ui.viewmodels.SharedViewModel
 import com.example.todoappcompose.util.Action
 import com.example.todoappcompose.util.SearchAppBarState
@@ -102,12 +106,14 @@ fun ListFab(
     FloatingActionButton(
         onClick = {
             onFabClicked(-1) // passing -1 to let know that a new task is to be created
-        }
+        },
+        containerColor = MaterialTheme.colorScheme.fabBackgroundColor,
+        shape = FloatingActionButtonDefaults.largeShape
     ) {
         Icon(
-            imageVector = Icons.Filled.Add,
+            imageVector = Icons.Rounded.Add,
             contentDescription = stringResource(id = R.string.add_button),
-            tint = Color.White
+            tint =  Color.Black
         )
     }
 }
@@ -149,8 +155,14 @@ private fun setSnackBarMessage(
         Action.DELETE_ALL -> {
             "All Tasks Removed!"
         }
-        else -> {
+        Action.DELETE -> {
             "$taskTitle Removed!"
+        }
+        Action.UPDATE -> {
+            "$taskTitle Updated!"
+        }
+        else -> {
+            "$taskTitle Added!"
         }
     }
 }
@@ -172,4 +184,10 @@ private fun undoDeletedTask(
     if (snackBarResult == SnackbarResult.ActionPerformed && action == Action.DELETE) {
         onUndoClicked(Action.UNDO)
     }
+}
+
+@Preview
+@Composable
+fun ListFabButtonPreview() {
+    ListFab(onFabClicked = {})
 }

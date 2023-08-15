@@ -1,6 +1,6 @@
 package com.example.todoappcompose.ui.viewmodels
 
-import androidx.compose.runtime.MutableState
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -31,6 +31,7 @@ class SharedViewModel @Inject constructor(
     private val dataStoreRepository: DataStoreRepository,
 ) : ViewModel() {
 
+    private val TAG = "SharedViewModelTag"
     var action by mutableStateOf(Action.NO_ACTION)
         private set // means action's value cannot be changed outside of viewmodel
 
@@ -211,6 +212,7 @@ class SharedViewModel @Inject constructor(
     }
 
     private fun readSortState() {
+        Log.d(TAG, "readSortState: Initialized")
         _sortState.value = RequestState.Loading
         try {
             viewModelScope.launch {
@@ -221,6 +223,7 @@ class SharedViewModel @Inject constructor(
                     .collect {
                         _sortState.value = RequestState.Success(it)
                     }
+                Log.d(TAG, "readSortState: Finished With ${_sortState.value}")
             }
         } catch (e: Exception) {
             _allTasks.value = RequestState.Error(e)

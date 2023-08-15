@@ -2,6 +2,7 @@ package com.example.todoappcompose.ui.theme
 
 import android.app.Activity
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -16,15 +17,15 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = Purple200,
+    secondary = Purple700,
+    tertiary = Teal200
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    primary = Purple500,
+    secondary = Purple700,
+    tertiary = Teal200
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -37,6 +38,7 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ToDoAppComposeTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -44,6 +46,8 @@ fun ToDoAppComposeTheme(
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
+    val statusBarColor = MaterialTheme.colorScheme.statusBarColor
+
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
@@ -57,8 +61,8 @@ fun ToDoAppComposeTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+            window.statusBarColor = statusBarColor.toArgb()
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
 
