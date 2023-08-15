@@ -8,7 +8,6 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -51,9 +50,7 @@ import com.example.todoappcompose.ui.theme.HighPriorityColor
 import com.example.todoappcompose.ui.theme.LARGEST_PADDING
 import com.example.todoappcompose.ui.theme.LARGE_PADDING
 import com.example.todoappcompose.ui.theme.MEDIUM_PADDING
-import com.example.todoappcompose.ui.theme.MediumGray
 import com.example.todoappcompose.ui.theme.PRIORITY_INDICATOR_SIZE
-import com.example.todoappcompose.ui.theme.TASK_ITEM_ELEVATION
 import com.example.todoappcompose.util.Action
 import com.example.todoappcompose.util.RequestState
 import com.example.todoappcompose.util.SearchAppBarState
