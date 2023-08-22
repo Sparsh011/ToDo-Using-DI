@@ -1,5 +1,6 @@
 package com.example.todoappcompose.ui.screens.list
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -29,9 +31,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.todoappcompose.R
 import com.example.todoappcompose.components.DisplayAlertDialog
 import com.example.todoappcompose.components.PriorityItem
@@ -48,7 +50,7 @@ import com.example.todoappcompose.util.SearchAppBarState
 fun ListAppBar(
     sharedViewModel: SharedViewModel,
     searchAppBarState: SearchAppBarState,
-    searchTextState: String
+    searchTextState: String,
 ) {
     when (searchAppBarState) {
         SearchAppBarState.CLOSED -> {
@@ -64,6 +66,7 @@ fun ListAppBar(
                 }
             )
         }
+
         else -> {
             SearchAppBar(
                 searchQuery = searchTextState,
@@ -243,17 +246,17 @@ fun SearchAppBar(
     onTextChange: (String) -> Unit,
     onCloseClicked: () -> Unit,
     onSearchClicked: (String) -> Unit,
-){
+) {
     val focusManager = LocalFocusManager.current
 
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(TOP_APP_BAR_HEIGHT),
-        color = MaterialTheme.colorScheme.topAppBarBackgroundColor
-    ) {
+    Surface (
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.topAppBarBackgroundColor) // work around for bottom space
+    ){
         TextField(
-            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.topAppBarBackgroundColor),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(TOP_APP_BAR_HEIGHT),
             value = searchQuery,
             onValueChange = {
                 onTextChange(it)
@@ -264,12 +267,12 @@ fun SearchAppBar(
                     color = MaterialTheme.colorScheme.topAppBarContentColor
                 )
             },
-            textStyle = TextStyle(
-                color = Color.Black
-            ),
             singleLine = true,
             leadingIcon = {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = {
+                    onSearchClicked(searchQuery)
+                    focusManager.clearFocus()
+                }) {
                     Icon(
                         imageVector = Icons.Filled.Search,
                         contentDescription = stringResource(id = R.string.search_tasks),
@@ -281,8 +284,7 @@ fun SearchAppBar(
                 IconButton(onClick = {
                     if (searchQuery.isNotEmpty()) {
                         onTextChange("")
-                    }
-                    else {
+                    } else {
                         onCloseClicked()
                     }
                 })
