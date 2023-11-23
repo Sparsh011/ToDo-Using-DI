@@ -10,7 +10,10 @@ This ToDo app can be used to keep track of your tasks. I designed it with Jetpac
 - **Add, Edit, and Delete Tasks:** Easily manage your tasks with simple and intuitive actions.
 
 - **Dark Mode:** Switch between light and dark modes based on your preference or the time of day.
+  
+- **Filter Tasks** Filter tasks on the basis of their priorities.
 
+- **Search Tasks** Search through the tasks by simply typing a matching character.
 ## Tech Stack
 
 I've leveraged some cool technologies to make this app come to life:
